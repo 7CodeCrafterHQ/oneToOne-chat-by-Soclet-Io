@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Bootstrap demo</title>
+  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css' rel='stylesheet'
+    integrity='sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi' crossorigin='anonymous'>
+  <style>
+    * {
+      margin: 0%;
+      padding: 0%;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="main" class="w-100 h-100 d-flex justify-content-center align-items-center  ">
+    <div class="conversations bg-danger" style="height: 60vh; width: 55vw;">
+      <div class="conversationArea" style="height: calc(100% - 7vh);">
+
+      
+      </div>
+      <div class="input d-flex" style="height: 7vh;">
+        <input class="form-control" type="text">
+        <button id="btn" class="btn btn-success">send</button>
+      </div>
+    </div>
+  </div>
+
+  <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js'
+    integrity='sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3' crossorigin='anonymous'></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+    let grpname = prompt('enter your grp name')
+    socket.emit("color",grpname)
+
+    function sendmsg() {
+      let message = document.querySelector("input").value
+      let temp = `<div class="msg outGoingMessage ms-auto p-2 rounded-2 m-1 bg-light" style="width: fit-content;">
+          ${message}
+        </div>`
+      document.querySelector(".conversationArea").innerHTML += temp
+      document.querySelector("input").value = ""
+      socket.emit("sony", {message,grpname})
+    }
+    document.querySelector("#btn").addEventListener("click", sendmsg)
+
+    function recivemsg(msg) {
+      let temp = `  <div class="msg incomingMessage p-2 rounded-2 m-1 bg-light" style="width: fit-content;">
+          ${msg}
+        </div>`
+        document.querySelector(".conversationArea").innerHTML += temp
+    }
+    socket.on("max",rmsg =>{
+      recivemsg(rmsg)
+    })
+  </script>
+</body>
+
+</html>
